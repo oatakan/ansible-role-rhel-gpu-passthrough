@@ -1,0 +1,7 @@
+---
+
+pci_device_key_name: NVIDIA
+detach_gpu_from_host: false
+consoleblank_timeout: 60
+set_consoleblank: true
+grub_config_file: /boot/efi/EFI/{{ ansible_distribution | lower }}/grub.cfg
