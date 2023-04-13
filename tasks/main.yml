@@ -1,5 +1,10 @@
 ---
 
+- name: ensure pciutils is installed
+  yum:
+    name: pciutils
+    state: present
+
 - name: get pci slot
   shell: lspci -mm | grep "{{ pci_device_key_name }}" | cut -d " " -f 1
   register: pci_slot
