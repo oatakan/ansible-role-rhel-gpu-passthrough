@@ -1,0 +1,19 @@
+---
+
+- name: add kernel parameters
+  command: grubby --update-kernel ALL {{ kernel_args }}
+
+- name: create vfio.conf file
+  copy:
+    dest: /etc/modprobe.d/vfio.conf
+    content: |
+      options vfio-pci ids={{ pci_vendor_device.results|map(attribute="stdout")|reject("equalto", "")|join (",") }}
+  when: pci_vendor_device is defined
+  notify: reboot system
+
+- name: create vfio-pci.conf file
+  copy:
+    dest: /etc/modules-load.d/vfio-pci.conf
+    content: vfio-pci
+  when: pci_vendor_device is defined
+  notify: reboot system

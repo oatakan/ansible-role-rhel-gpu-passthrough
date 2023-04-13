@@ -1,18 +1,14 @@
 ---
 
-- name: get pci slot
-  shell: lspci -mm | grep "{{ pci_device_key_name }}" | cut -d " " -f 1
-  register: pci_slot
-
-- name: find vendor_device
-  shell: lspci -kn -s "{{ item }}" | head -1 | cut -d" " -f 3 | tr -d '[:space:]'
-  register: pci_vendor_device
-  loop: "{{ pci_slot.stdout_lines }}"
-
-- name: find module
-  shell: lspci -vkmmn -s "{{ item }}" | grep "^Module:" | cut -d":" -f 2 | tr -d '[:space:]'
-  register: pci_module
-  loop: "{{ pci_slot.stdout_lines }}"
+- name: add consoleblank to grub
+  lineinfile:
+    state: present
+    dest: /etc/default/grub
+    backrefs: yes
+    regexp: '^(GRUB_CMDLINE_LINUX=(?!.*\ consoleblank)\"[^\"]+)(\".*)'
+    line: '\1 consoleblank={{ consoleblank_timeout }}\2'
+  when: set_consoleblank|bool
+  notify: reboot system
 
 - name: add pci-stub.ids to grub
   lineinfile:
@@ -35,5 +31,23 @@
   when: pci_module is defined
   notify: reboot system
 
-- include_tasks: detach_gpu.yml
-  when: detach_gpu_from_host|bool
+- name: add iommu=pt to grub
+  lineinfile:
+    state: present
+    dest: /etc/default/grub
+    backrefs: yes
+    regexp: '^(GRUB_CMDLINE_LINUX=(?!.*\ iommu)\"[^\"]+)(\".*)'
+    line: '\1 iommu=pt\2'
+  notify: reboot system
+
+- name: add {{ cpu_type }}_iommu to grub
+  lineinfile:
+    state: present
+    dest: /etc/default/grub
+    backrefs: yes
+    regexp: '^(GRUB_CMDLINE_LINUX=(?!.*{{ cpu_type }}_iommu)\"[^\"]+)(\".*)'
+    line: '\1 {{ cpu_type }}_iommu=on\2'
+  when: cpu_type is defined
+  notify: reboot system
+
+- include: rhel8_grub.yml

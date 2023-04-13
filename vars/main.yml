@@ -1,0 +1,7 @@
+---
+
+
+cpu_type: "{{ ansible_processor[1] | lower }}"
+iommu_args: "--args {{ iommu_types[cpu_type] }}_iommu=on --args iommu=pt"
+console_arg: " --args consoleblank={{ consoleblank_timeout }}"
+kernel_args: "{{ iommu_args }}{{ console_arg if set_consoleblank else '' }}"
