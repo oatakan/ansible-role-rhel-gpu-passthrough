@@ -24,8 +24,5 @@
 - include_tasks: rhel{{ ansible_distribution_major_version }}_gpu.yml
   when: ansible_os_family == 'RedHat'
 
-- include_tasks: detach_gpu.yml
-  when: detach_gpu_from_host|bool
-
 - name: flush handlers
   meta: flush_handlers

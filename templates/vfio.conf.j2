@@ -1,0 +1,5 @@
+options vfio-pci ids={{ vfio_pci_ids }}
+{% for module_item in blacklist_modules %}
+softdep {{ module_item }} pre: vfio-pci
+{% endfor %}
+options kvm_amd avic=1

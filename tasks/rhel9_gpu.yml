@@ -4,10 +4,9 @@
   command: grubby --update-kernel ALL --args "{{ kernel_args }}"
 
 - name: create vfio.conf file
-  copy:
+  template:
+    src: vfio.conf.j2
     dest: /etc/modprobe.d/vfio.conf
-    content: |
-      options vfio-pci ids={{ pci_vendor_device.results|map(attribute="stdout")|reject("equalto", "")|join (",") }}
   when: pci_vendor_device is defined
   notify: reboot system
 
