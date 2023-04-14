@@ -3,7 +3,7 @@
 cpu_type: "{{ 'amd' if ('amd' in (ansible_processor[1] | lower)) else 'intel' }}"
 
 blacklist_modules: '{{ pci_module.results|map(attribute="stdout")|reject("equalto", "") }}'
-vfio_pci_ids: '{{ pci_vendor_device.results|map(attribute="stdout")|reject("equalto", "")|join (",") }}'
+vfio_pci_ids: '{{ pci_vendor_device.results|map(attribute="stdout")|reject("equalto", "") }}'
 
 iommu_args: "{{ cpu_type }}_iommu=on iommu=pt"
 console_arg: "consoleblank={{ consoleblank_timeout }}"

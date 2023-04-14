@@ -21,8 +21,11 @@
       loop: "{{ pci_slot.stdout_lines }}"
   when: pci_slot.stdout | length > 0
 
-- include_tasks: rhel{{ ansible_distribution_major_version }}_gpu.yml
+- include_tasks: update_kernel.yml
   when: ansible_os_family == 'RedHat'
+
+- include_tasks: unbind_gpu.yml
+  when: unbind_gpu|bool
 
 - name: flush handlers
   meta: flush_handlers

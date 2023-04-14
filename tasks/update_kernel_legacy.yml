@@ -59,7 +59,20 @@
   when: detach_gpu_from_host|bool
   notify: reboot system
 
-- include: rhel8_grub.yml
+- name: check if legacy BIOS
+  stat:
+    path: /boot/grub2/grub.cfg
+  register: legacy_bios_grub_config
 
-- include_tasks: detach_gpu.yml
-  when: detach_gpu_from_host|bool
+- name: check if UEFI
+  stat:
+    path: "{{ grub_config_file }}"
+  register: uefi_bios_grub_config
+
+- name: regenerate grub config (BIOS)
+  shell: grub2-mkconfig -o /boot/grub2/grub.cfg
+  when: legacy_bios_grub_config.stat.exists
+
+- name: regenerate grub config (UEFI)
+  shell: grub2-mkconfig -o {{ grub_config_file }}
+  when: uefi_bios_grub_config.stat.exists

@@ -1,4 +1,4 @@
-options vfio-pci ids={{ vfio_pci_ids }}
+options vfio-pci ids={{ vfio_pci_ids|join (",") }}
 {% for module_item in blacklist_modules %}
 softdep {{ module_item }} pre: vfio-pci
 {% endfor %}
