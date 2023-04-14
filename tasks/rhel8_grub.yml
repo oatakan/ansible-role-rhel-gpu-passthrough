@@ -5,10 +5,15 @@
     path: /boot/grub2/grub.cfg
   register: legacy_bios_grub_config
 
-- name: regenerate grub config
+- name: check if UEFI
+  stat:
+    path: "{{ grub_config_file }}"
+  register: uefi_bios_grub_config
+
+- name: regenerate grub config (BIOS)
   shell: grub2-mkconfig -o /boot/grub2/grub.cfg
   when: legacy_bios_grub_config.stat.exists
 
-- name: regenerate grub config
+- name: regenerate grub config (UEFI)
   shell: grub2-mkconfig -o {{ grub_config_file }}
-  when: legacy_bios_grub_config.stat.exists == False
+  when: uefi_bios_grub_config.stat.exists

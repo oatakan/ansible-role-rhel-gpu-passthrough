@@ -6,7 +6,7 @@
     dest: /etc/default/grub
     backrefs: yes
     regexp: '^(GRUB_CMDLINE_LINUX=(?!.*\ consoleblank)\"[^\"]+)(\".*)'
-    line: '\1 consoleblank={{ consoleblank_timeout }}\2'
+    line: '\1 {{ console_arg }}\2'
   when: set_consoleblank|bool
   notify: reboot system
 
@@ -48,6 +48,16 @@
     regexp: '^(GRUB_CMDLINE_LINUX=(?!.*{{ cpu_type }}_iommu)\"[^\"]+)(\".*)'
     line: '\1 {{ cpu_type }}_iommu=on\2'
   when: cpu_type is defined
+  notify: reboot system
+
+- name: add display arguments to grub
+  lineinfile:
+    state: present
+    dest: /etc/default/grub
+    backrefs: yes
+    regexp: '^(GRUB_CMDLINE_LINUX=(?!.*\ {{ display_args }})\"[^\"]+)(\".*)'
+    line: '\1 {{ display_args }}\2'
+  when: detach_gpu_from_host|bool
   notify: reboot system
 
 - include: rhel8_grub.yml

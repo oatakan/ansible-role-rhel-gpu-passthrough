@@ -1,7 +1,7 @@
 ---
 
 - name: add kernel parameters
-  command: grubby --update-kernel ALL {{ kernel_args }}
+  command: grubby --update-kernel ALL --args "{{ kernel_args }}"
 
 - name: create vfio.conf file
   copy:
