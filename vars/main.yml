@@ -10,4 +10,4 @@ console_arg: "consoleblank={{ consoleblank_timeout }}"
 display_args: "vga=off video=efifb:off video=vesafb:off"
 blacklists_arg: 'rd.driver.blacklist={{ blacklist_modules|join (",") }}'
 vfio_pci_ids_arg: 'vfio-pci.ids={{ vfio_pci_ids|join (",") }}'
-kernel_args: "{{ iommu_args }}{{ ' ' + vfio_pci_ids_arg if (vfio_pci_ids | length) else '' }}{{ ' ' + blacklists_arg if (blacklist_modules | length) else '' }}{{ ' ' + console_arg if set_consoleblank else '' }}{{ ' ' + display_args if detach_gpu_from_host else '' }}"
+kernel_args: "{{ iommu_args }}{{ ' ' + vfio_pci_ids_arg if (vfio_pci_ids | length) else '' }}{{ ' ' + blacklists_arg if (blacklist_modules | length) else '' }}{{ ' ' + console_arg if (set_consoleblank|bool) else '' }}{{ ' ' + display_args if (detach_gpu_from_host|bool) else '' }}"

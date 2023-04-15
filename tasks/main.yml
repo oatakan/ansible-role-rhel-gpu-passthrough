@@ -33,7 +33,7 @@
     dest: /root/enable_gpu_passthrough.yml
   vars:
     _pci_device_key_name: "{{ pci_device_key_name }}"
-    _detach_gpu_from_host: "{{ detach_gpu_from_host }}"
+    _detach_gpu_from_host: "{{ detach_gpu_from_host | bool }}"
 
 - name: flush handlers
   meta: flush_handlers
