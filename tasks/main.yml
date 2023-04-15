@@ -27,5 +27,13 @@
 - include_tasks: unbind_gpu.yml
   when: unbind_gpu|bool
 
+- name: ensure playbook is create for local execution
+  template:
+    src: playbooks/enable_gpu_passthrough.yml
+    dest: /root/enable_gpu_passthrough.yml
+  vars:
+    _pci_device_key_name: "{{ pci_device_key_name }}"
+    _detach_gpu_from_host: "{{ detach_gpu_from_host }}"
+
 - name: flush handlers
   meta: flush_handlers

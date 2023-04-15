@@ -6,3 +6,6 @@ unbind_gpu: false
 consoleblank_timeout: 60
 set_consoleblank: true
 grub_config_file: /boot/efi/EFI/{{ ansible_distribution | lower }}/grub.cfg
+
+role_url: https://github.com/oatakan/ansible-role-rhel_gpu_passthrough.git
+role_name: ansible-role-rhel_gpu_passthrough

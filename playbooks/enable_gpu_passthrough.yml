@@ -1,0 +1,18 @@
+- hosts: localhost
+  become: false
+  vars:
+    role_url: https://github.com/oatakan/ansible-role-rhel_gpu_passthrough.git
+    role_name: ansible-role-rhel_gpu_passthrough
+    pci_device_key_name: '{{ _pci_device_key_name | default('') }}'
+    detach_gpu_from_host: '{{ _detach_gpu_from_host | default(false) }}'
+  pre_tasks:
+    - name: ensure ansible is locally installed
+      yum:
+        name: ansible
+        state: present
+
+    - name: ensure role is locally available
+      command: ansible-galaxy role install git+{{ role_url }}
+
+  roles:
+    - {{ role_name }}
